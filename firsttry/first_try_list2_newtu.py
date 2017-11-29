@@ -3,11 +3,11 @@ from tkinter import messagebox
 from tkinter import *
 import json
 import webbrowser
-from tunews import get_all_note,get_all_note2
+from tunews import get_all_note,get_all_note2,get_news,get_news2
 
 
 
-with open('tickets.json','r') as f:   #从json文件中读取3455支股票代码
+with open('tickets2.json','r') as f:   #从json文件中读取3455支股票代码
     tickets = json.load(f)
 code_list = list(tickets[i]['code'] for i in range(len(tickets)))
 
@@ -30,11 +30,11 @@ def get_information(*args):
     if right_code(strings):
         text_list_frame.delete(0, END)
         if keywordsvar.get() != 'is':
-            #news_titles, dates, news_urls = get_news(strings)
-            news_titles, dates, news_urls = get_all_note(strings)
+            news_titles, dates, news_urls = get_news(strings)
+            #news_titles, dates, news_urls = get_all_note(strings)
         elif keywordsvar.get() == 'is':
-            #news_titles,dates,news_urls = get_news2(strings)
-            news_titles, dates, news_urls = get_all_note2(strings)
+            news_titles,dates,news_urls = get_news2(strings)
+            #news_titles, dates, news_urls = get_all_note2(strings)
         if len(news_titles) > 0:
             new_list = [dates[i] + '>>' + news_titles[i] for i in range(len(news_titles))]
             listvar.set(value=new_list)
@@ -62,7 +62,7 @@ def get_name(*args):
     name_str = ''
     for i in range(len(tickets)):
         if code_str == tickets[i]['code']:
-            name_str = tickets[i]['name']
+            name_str = tickets[i]['name']+' ('+tickets[i]['area']+')'
     namevar.set(name_str)
 
 
