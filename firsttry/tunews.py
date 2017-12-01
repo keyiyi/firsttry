@@ -1,4 +1,7 @@
 import tushare as ts
+import requests
+from bs4 import BeautifulSoup
+import time
 from datetime import datetime,timedelta
 
 
@@ -73,10 +76,33 @@ def get_all_note2(code):
             url_list += urls
     return(title_list,date_list,url_list)
 
+def get_pda(urls):
+    pda_urls = []
+    for url1 in urls:
+        web_data = requests.get(url1)
+        time.sleep(0.3)
+        web_data.encoding = 'gb2312'
+        page_date = web_data.text
+        soup = BeautifulSoup(page_date,'lxml')
+        #pattern = re.compile('gallery:(.*?)"]},', re.S)
+        pda_url = soup.find('th',style="text-align:center").find('a').get('href')
+        #print(pda_urls)
+        pda_urls.append(pda_url)
+    return pda_urls
+
+def get_pda1(url):
+    web_data = requests.get(url)
+    web_data.encoding = 'gb2312'
+    page_date = web_data.text
+    soup = BeautifulSoup(page_date,'lxml')
+    pda_url = soup.find('th',style="text-align:center").find('a').get('href')
+    return pda_url
+
 
 def main():
     code = '600393'
-    get_news(code)
+    *args,urls = get_news(code)
+    print(get_pda(urls))
 
 
 if __name__ == '__main__':
