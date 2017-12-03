@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 from datetime import datetime,timedelta
+import json
 
 
 HOWLONG = 120
@@ -105,8 +106,7 @@ def main():
     print(get_pda(urls))
 
 
-def get_coinfo_news(code):
-    
+
 
 if __name__ == '__main__':
     main()
