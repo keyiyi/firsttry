@@ -4,7 +4,6 @@ from tkinter import *
 import json
 import webbrowser
 import random
-#from tunews import get_all_note,get_all_note2,get_news,get_news2,get_pda1
 from cninfonews import cninfo_news,cninfo_news2
 
 
@@ -33,10 +32,8 @@ def get_information(*args):
         text_list_frame.delete(0, END)
         if keywordsvar.get() != 'is':
             news_titles, dates, news_urls = cninfo_news(strings)
-            #news_titles, dates, news_urls = get_all_note(strings)
         elif keywordsvar.get() == 'is':
             news_titles,dates,news_urls = cninfo_news2(strings)
-            #news_titles, dates, news_urls = get_all_note2(strings)
         if len(news_titles) > 0:
             new_list = [dates[i] + '>>' + news_titles[i] for i in range(len(news_titles))]
             listvar.set(value=new_list)
@@ -85,6 +82,7 @@ def clear_text(*args):
     namevar.set('Name:')
     text_list_frame.insert('0', '选择或输入股票代码，按Get News获得新闻，或按Quit退出。')
     text_list_frame.insert('end', '本程序使用过程必须连接互联网（Connect internet to run this App)')
+    text_list_frame.insert('end', 'By @keyiyi')
     keywordsvar.set('')
     
     
@@ -120,10 +118,9 @@ botton3 = ttk.Button(mainframe,text = 'Reset',command = clear_text)    #重置�
 code = ttk.Combobox(mainframe,textvariable = codevar,value = code_list,width = 12)  #代码输入框（列表）
 checkbotton1 = ttk.Radiobutton(mainframe,text= '质押类公告',variable = keywordsvar,value = 'is')
 checkbotton2 = ttk.Radiobutton(mainframe,text= '全部公告',variable = keywordsvar,value = 'not')
-#code['value'] = code_list
 text_list_frame = Listbox(mainframe, width = 60,height = 10,listvariable = listvar)  #结果列表，即新闻列表
 text_list_frame.insert('0','选择或输入股票代码，并按Get News获得新闻，或按Quit退出。')
-text_list_frame.insert('end','本程序使用过程必须连接互联网（Connect internet to run this App)')
+text_list_frame.insert('end','本程序使用过程必须连接互联网（Connect internet to run this App)@keyiyi')
 
 scroll = ttk.Scrollbar(mainframe, orient=VERTICAL, command=text_list_frame.yview)  #滚动条
 scroll2 = ttk.Scrollbar(mainframe, orient=HORIZONTAL, command=text_list_frame.xview)
