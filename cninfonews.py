@@ -3,19 +3,23 @@ import json
 
 code = '300033'
 
-
 def cninfo_news(code):
-    url1 = 'http://www.cninfo.com.cn/cninfo-new/disclosure/szse/fulltext'
+    # url1 = 'http://www.cninfo.com.cn/cninfo-new/disclosure/szse/fulltext'
+    url1 = 'http://www.cninfo.com.cn/new/singleDisclosure/fulltext'
     data = {
         'stock':code,
         'pageNum':1,
-        'pageSize':40,
-        'column':'szse_main',
-        'tabName':'latest'
+        'pageSize':20,
+        'plate':'szse',
+        'tabname':'latest',
+        'limit':''
     }
 
     content_str = requests.post(url1,data=data)
     content = json.loads(content_str.text)
+#    return content
+
+#def parse_content(content):
     main_url = 'http://www.cninfo.com.cn/'
     all_news = content['classifiedAnnouncements']
     #news_num = content['totalAnnouncement']
@@ -49,5 +53,5 @@ def cninfo_news2(code):
     return (new_titles, new_dates, new_urls)
 
 if __name__ == '__main__':
-    titles,dates,urls = cninfo_news(code)
-    print(titles,urls)
+   titles,dates,urls = cninfo_news(code)
+   print(titles)
