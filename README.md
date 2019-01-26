@@ -1,1 +1,2 @@
-写一个小程序
+A simple application for quick getting announcements of companies in chinese stock market.
+
