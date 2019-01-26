@@ -7,8 +7,6 @@ import random
 from cninfonews import cninfo_news,cninfo_news2
 
 
-
-
 with open('tickets2.json','r') as f:   #从json文件中读取3455支股票代码
     tickets = json.load(f)
 code_list = list(tickets[i]['code'] for i in range(len(tickets)))
@@ -23,8 +21,6 @@ def right_code(str):
     else:
         return False
 
-
-
 def get_information(*args):
     global news_titles, news_urls
     strings = str(codevar.get())
@@ -32,7 +28,7 @@ def get_information(*args):
         text_list_frame.delete(0, END)
         if keywordsvar.get() != 'is':
             news_titles, dates, news_urls = cninfo_news(strings)
-        elif keywordsvar.get() == 'is':
+        else:
             news_titles,dates,news_urls = cninfo_news2(strings)
         if len(news_titles) > 0:
             new_list = [dates[i] + '>>' + news_titles[i] for i in range(len(news_titles))]
@@ -42,8 +38,6 @@ def get_information(*args):
             text_list_frame.insert('end','没有找到结果。')
     else:
         messagebox.showinfo(message='Please input the right code!\n请输入正确的股票代码。')
-
-
 
 def open_url(*args):
     #打开单条新闻网址
@@ -57,9 +51,7 @@ def open_url(*args):
             messagebox.showinfo(message='Something is wrong when open the url')
     else:
         messagebox.showinfo(message='You have not got any news!')
-    
-        
-        
+
 def get_name(*args):
     #当选中／输入代码后，显示相应的公司中文简称
     code_str = str(codevar.get())
@@ -72,7 +64,6 @@ def get_name(*args):
         name_str = "Wrong code input./输入错误。"
     namevar.set('Name: '+name_str)
 
-
 def clear_text(*args):
     #当按下按键清除各部件的文字显示
     text_list_frame.delete(0, END)
@@ -84,8 +75,7 @@ def clear_text(*args):
     text_list_frame.insert('end', '本程序使用过程必须连接互联网（Connect internet to run this App)')
     text_list_frame.insert('end', 'By @keyiyi')
     keywordsvar.set('')
-    
-    
+
 root = Tk()
 root.title('GET NEWS')
 
@@ -97,15 +87,11 @@ root.resizable(width=False, height=False)
 mainframe['borderwidth'] = 2
 mainframe['relief'] = 'sunken'
 
-
 codevar = StringVar() #输入框中的股票代码
 namevar = StringVar() #标签公司简称
 statuvar = StringVar() #结果列表简况，比如多少条新闻
 listvar = StringVar()  #结果列表文字，列表
 keywordsvar = StringVar()
-# keywordsvar2 = BooleanVar()
-
-
 
 label1 = ttk.Label(mainframe,text= "News' table:",)
 label2 = ttk.Label(mainframe,text = "Please choice or enter a code:\n请选择或输入股票代码:")
@@ -139,29 +125,16 @@ scroll.grid(row = 5,column = 4,sticky=(N,S,E))
 scroll2.grid(row = 6,column = 0,columnspan = 4,sticky=(W,E,S),padx = 0,pady = 0)
 label6.grid(row =7,column = 0,sticky = W,padx = 1,pady = 1)
 
-
 text_list_frame['yscrollcommand'] = scroll.set
 text_list_frame['xscrollcommand'] = scroll2.set
 
-
-
-
-#text_frame.bind("<KeyPress>",lambda e : "break")
 code.bind('<<ComboboxSelected>>', get_name)
 code.bind('<Return>',get_name)
 text_list_frame.bind('<Double-1>', open_url)
-#text1(state = 'disable')
-#code.bind('enter',get_info)
-#botton2.bind('1',get_info)
-#code.bind('<Enter>',get_info)
-#code.bind("<KeyPress>",lambda e : "break")
 root.columnconfigure(0, weight=1)
-#root.rowconfigure(0, weight=1)
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(5, weight=1)
 mainframe.rowconfigure(4, weight=1)
 mainframe.rowconfigure(2, weight=1)
 
-
 root.mainloop()
-
