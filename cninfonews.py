@@ -4,7 +4,11 @@ import json
 code = '300033'
 
 def cninfo_news(code):
-    # url1 = 'http://www.cninfo.com.cn/cninfo-new/disclosure/szse/fulltext'
+    #url1 = 'http://www.cninfo.com.cn/cninfo-new/disclosure/szse/fulltext'
+    titles = []
+    dates = []
+    urls = []
+
     url1 = 'http://www.cninfo.com.cn/new/singleDisclosure/fulltext'
     data = {
         'stock':code,
@@ -14,28 +18,34 @@ def cninfo_news(code):
         'tabname':'latest',
         'limit':''
     }
-
-    content_str = requests.post(url1,data=data)
-    content = json.loads(content_str.text)
+    try:
+        content_status = requests.post(url1,data=data)
+    except:
+        conn = False
+    else:
+        conn = True
+    if not conn:
+        titles = ['please check the connet']
+        dates = ['none']
+        urls = ['none']
+    elif content_status.status_code != 200:
+        titles, dates, urls = ['api error'], ['none'],['none']
+    else:
+        content = json.loads(content_status.text)
 #    return content
 
 #def parse_content(content):
-    main_url = 'http://www.cninfo.com.cn/'
-    all_news = content['classifiedAnnouncements']
-    #news_num = content['totalAnnouncement']
-    #print(content['classifiedAnnouncements'][0][0])
-    titles = []
-    dates = []
-    urls = []
-    for day_news in all_news:
-        for news in day_news:
-            name = news['secName']
-            title = name+':'+news['announcementTitle']
-            date = list(news['adjunctUrl'].split('/'))[1]
-            url_p = main_url + news['adjunctUrl']
-            titles.append(title)
-            dates.append(date)
-            urls.append(url_p)
+        main_url = 'http://www.cninfo.com.cn/'
+        all_news = content['classifiedAnnouncements']
+        for day_news in all_news:
+            for news in day_news:
+                name = news['secName']
+                title = name+':'+news['announcementTitle']
+                date = list(news['adjunctUrl'].split('/'))[1]
+                url_p = main_url + news['adjunctUrl']
+                titles.append(title)
+                dates.append(date)
+                urls.append(url_p)
     return(titles,dates,urls)
 
 def cninfo_news2(code):
