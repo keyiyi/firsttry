@@ -7,33 +7,29 @@ from tkinter import messagebox
 from tkinter import *
 
 from cninfonews import cninfo_news, cninfo_news2
+from cons import getTicktes
 
-# 从json文件中读取3455支股票代码
-with open('tickets2.json', 'r') as f:
-    tickets = json.load(f)
+# init tickets's information 从json文件中读取3455支股票代码
+tickets = getTicktes()
 code_list = list(tickets[i]['code'] for i in range(len(tickets)))
 random.shuffle(code_list)
-news_titles = []
-news_urls = []
+news_titles, news_urls = [], []
 
 
 def right_code(str):
     # 判断是否是股票代码
-    if str in code_list:
-        return True
-    else:
-        return False
+    return str in code_list
 
 
 def get_information(*args):
     global news_titles, news_urls
-    strings = str(codevar.get())
-    if right_code(strings):
+    code = str(codevar.get())
+    if right_code(code):
         text_list_frame.delete(0, END)
         if keywordsvar.get() != 'is':
-            news_titles, dates, news_urls = cninfo_news(strings)
+            news_titles, dates, news_urls = cninfo_news(code)
         else:
-            news_titles, dates, news_urls = cninfo_news2(strings)
+            news_titles, dates, news_urls = cninfo_news2(code)
         if len(news_titles) > 0 and dates != ['none']:
             new_list = [dates[i] + '>>' + news_titles[i] for i in range(len(news_titles))]
             listvar.set(value=new_list)
@@ -66,8 +62,7 @@ def get_name(*args):
     if right_code(code):
         name_str = ''
         '''
-        codes_list = list(tickets[i]['code'] for i in range(len(tickets)))
-        index = codes_list.index(code)
+        index = code_list.index(code)
         name_str = tickets[index]['name']+' ('+tickets[index]['area']+'-'+tickets[index]['industry']+')'
         '''
         for i in range(len(tickets)):
@@ -83,7 +78,7 @@ def clear_text(*args):
     # 当按下按键清除各部件的文字显示
     text_list_frame.delete(0, END)
     namevar.set('')
-    code.set('')
+    input_code.set('')
     statuvar.set('')
     namevar.set('Name:')
     text_list_frame.insert('0', '选择或输入股票代码，按Get News获得新闻，或按Quit退出。')
@@ -103,6 +98,7 @@ root.resizable(width=False, height=False)
 mainframe['borderwidth'] = 2
 mainframe['relief'] = 'sunken'
 
+
 codevar = StringVar()   # 输入框中的股票代码
 namevar = StringVar()   # 标签公司简称
 statuvar = StringVar()  # 结果列表简况，比如多少条新闻
@@ -117,7 +113,7 @@ label6 = ttk.Label(mainframe, textvariable=statuvar,)
 botton1 = ttk.Button(mainframe, text='Quit', command=root.destroy)  # 退出键
 botton2 = ttk.Button(mainframe, text='Get News', command=get_information)   # 获取新闻按键
 botton3 = ttk.Button(mainframe, text='Reset', command=clear_text)     # 重置键
-code = ttk.Combobox(mainframe, textvariable=codevar,value=code_list, width=12)   # 代码输入框（列表）
+input_code = ttk.Combobox(mainframe, textvariable=codevar,value=code_list, width=12)   # 代码输入框（列表）
 checkbotton1 = ttk.Radiobutton(mainframe, text='质押类公告', variable=keywordsvar, value='is')
 checkbotton2 = ttk.Radiobutton(mainframe, text='全部公告', variable=keywordsvar, value='not')
 text_list_frame = Listbox(mainframe, width=60, height=10, listvariable=listvar)   # 结果列表，即新闻列表
@@ -128,7 +124,7 @@ scroll = ttk.Scrollbar(mainframe, orient=VERTICAL, command=text_list_frame.yview
 scroll2 = ttk.Scrollbar(mainframe, orient=HORIZONTAL, command=text_list_frame.xview)
 
 label2.grid(row=0, column=0, columnspan=2, sticky=W, padx=10, pady=5)
-code.grid(row=1, column=0, sticky=W, padx=10, pady=5)
+input_code.grid(row=1, column=0, sticky=W, padx=10, pady=5)
 label3.grid(row=2, column=0, sticky=W, padx=10, pady=5)
 checkbotton1.grid(row=1, column=2, sticky=W, padx=5)
 checkbotton2.grid(row=1, column=3, sticky=W, padx=5)
@@ -144,8 +140,9 @@ label6.grid(row=7, column=0, sticky=W, padx=1, pady=1)
 text_list_frame['yscrollcommand'] = scroll.set
 text_list_frame['xscrollcommand'] = scroll2.set
 
-code.bind('<<ComboboxSelected>>', get_name)
-code.bind('<Return>',get_name)
+input_code.bind('<<ComboboxSelected>>', get_name)
+input_code.bind('<Return>',get_name)
+input_code.bind('<Return>',get_information)
 text_list_frame.bind('<Double-1>', open_url)
 root.columnconfigure(0, weight=1)
 mainframe.columnconfigure(0, weight=1)
